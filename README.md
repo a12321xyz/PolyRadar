@@ -1,10 +1,25 @@
 # PolyRadar
 
-PolyRadar is a Next.js app for Polymarket analytics:
+Polymarket trader analytics dashboard built with Next.js.
 
-- leaderboard browsing
-- wallet analytics (positions, activity, PnL)
-- wallet-vs-wallet comparison
+## Live App
+
+- Production: `https://poly-radar.vercel.app/`
+
+## Features
+
+- Trader leaderboard with ranking views
+- Wallet analytics (positions, activity, PnL)
+- Side-by-side wallet comparison
+- Fast API routes with cache + upstream timeouts
+
+## Tech Stack
+
+- Next.js 16 (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Vitest + ESLint
 
 ## Local Development
 
@@ -13,9 +28,9 @@ npm install
 npm run dev
 ```
 
-App runs at `http://localhost:3000`.
+Open `http://localhost:3000`.
 
-## Quality Checks
+## Checks Before Deploy
 
 ```bash
 npm run lint
@@ -23,21 +38,21 @@ npm run test
 npm run build
 ```
 
-## Deploying to Vercel
+## Vercel Deployment
 
-This project is ready for zero-config Vercel deployment.
+This repository is Vercel-ready.
 
-1. Push this repo to GitHub.
-2. Import the repo in Vercel.
-3. Use defaults:
-   - Framework preset: `Next.js`
-   - Build command: `npm run build`
-   - Output: `.next`
-4. Deploy.
+1. Import the GitHub repo in Vercel
+2. Keep default Next.js settings
+3. Deploy
 
 No environment variables are required for core functionality.
 
-## Notes
+## API Endpoints
 
-- Data is fetched from public Polymarket Data API endpoints.
-- Upstream API calls are cached and protected with request timeouts for better production reliability.
+- `GET /api/leaderboard`
+- `GET /api/wallet/[address]`
+
+## Data Source
+
+- Public Polymarket Data API (`https://data-api.polymarket.com`)
