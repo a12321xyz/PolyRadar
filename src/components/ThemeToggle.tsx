@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 
 export function ThemeToggle() {
-    const [isDark, setIsDark] = useState(false);
+    const [isDark, setIsDark] = useState(true);
 
     const applyTheme = useCallback((dark: boolean) => {
         setIsDark(dark);
@@ -12,8 +12,7 @@ export function ThemeToggle() {
 
     useEffect(() => {
         const stored = localStorage.getItem('theme');
-        // Default to light theme
-        const initialDark = stored === 'dark';
+        const initialDark = stored !== 'light';
         const timeoutId = window.setTimeout(() => {
             applyTheme(initialDark);
         }, 0);
