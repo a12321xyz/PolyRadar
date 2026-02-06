@@ -7,6 +7,7 @@ interface WalletData {
     rank: number;
     username: string;
     address: string;
+    fullAddress?: string;
     volume: number;
     pnl: number;
 }
@@ -18,7 +19,8 @@ export function AddressLookup() {
     const [error, setError] = useState<string | null>(null);
 
     const handleLookup = async () => {
-        if (!address.trim()) return;
+        const query = address.trim();
+        if (!query) return;
 
         setLoading(true);
         setError(null);
@@ -30,17 +32,27 @@ export function AddressLookup() {
             const data = await response.json();
 
             if (data.success) {
-                // Find the wallet (simplified search - in production would use a dedicated endpoint)
-                const found = data.data.find((entry: WalletData) =>
-                    entry.address.toLowerCase().includes(address.toLowerCase().slice(0, 6)) ||
-                    entry.username.toLowerCase().includes(address.toLowerCase())
-                );
+                const normalizedQuery = query.toLowerCase();
+                const isAddressQuery = normalizedQuery.startsWith('0x');
+
+                // Prefer exact full-address matching when user enters a wallet address.
+                const found = data.data.find((entry: WalletData) => {
+                    const fullAddress = entry.fullAddress?.toLowerCase();
+
+                    if (isAddressQuery && fullAddress) {
+                        return fullAddress === normalizedQuery;
+                    }
+
+                    return entry.username.toLowerCase().includes(normalizedQuery);
+                });
 
                 if (found) {
                     setResult(found);
                 } else {
                     setError('Wallet not found in top traders. Try a different address or check the leaderboard.');
                 }
+            } else {
+                setError(data.error || 'Failed to lookup wallet. Please try again.');
             }
         } catch (err) {
             setError('Failed to lookup wallet. Please try again.');
